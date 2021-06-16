@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 function Person({ person, childrenDict }) {
   // Получаем массив детей из словаря
-  const [children] = useState(childrenDict[person.id]);
+  const children = childrenDict[person.id];
   const [collapsed, setCollapsed] = useState(true);
 
   return (
