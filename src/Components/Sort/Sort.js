@@ -1,33 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 
-function Sort({ setElements, elements }) {
-  const sortFunction = (event) => {
-    event.target.value === "balance"
-      ? setElements(
-          [...elements].sort((a, b) => {
-            return (
-              Number(a.balance.slice(1).replace(",", "")) -
-              Number(b.balance.slice(1).replace(",", ""))
-            );
-          })
-        )
-      : setElements(
-          [...elements].sort((a, b) => {
-            return ("" + a.email).localeCompare(b.email);
-          })
-        );
+function Sort({ setChildrenDict, childrenDict }) {
+  const [sortStatus, setSortStatus] = useState({
+    balance: false,
+    email: false,
+  });
+
+  const sortByBalance = () => {
+    let sorted = {};
+    for (const key in childrenDict) {
+      if (Object.hasOwnProperty.call(childrenDict, key)) {
+        sorted[key] = childrenDict[key].sort((a, b) => {
+          return sortStatus.balance
+            ? Number(a.balance.slice(1).replace(",", "")) -
+                Number(b.balance.slice(1).replace(",", ""))
+            : Number(b.balance.slice(1).replace(",", "")) -
+                Number(a.balance.slice(1).replace(",", ""));
+        });
+      }
+    }
+    setSortStatus({ email: false, balance: !sortStatus.balance });
+    setChildrenDict(sorted);
   };
 
+  const sortByEmail = () => {
+    let sorted = {};
+    for (const key in childrenDict) {
+      if (Object.hasOwnProperty.call(childrenDict, key)) {
+        sorted[key] = childrenDict[key].sort((a, b) => {
+          return sortStatus.email
+            ? ("" + a.email).localeCompare(b.email)
+            : ("" + b.email).localeCompare(a.email);
+        });
+      }
+    }
+    setSortStatus({ balance: false, email: !sortStatus.email });
+    setChildrenDict(sorted);
+  };
   return (
     <div>
       <span>Sort by</span>
-      <select onChange={sortFunction}>
-        <option disabled selected>
-          Select field
-        </option>
-        <option value="balance">Balance</option>
-        <option value="email">Email</option>
-      </select>
+      <button className={`${sortStatus.balance && "active"}`} onClick={sortByBalance}>
+        {sortStatus.balance ? "↓ " : "↑ "}Balance
+      </button>
+      <button className={`${sortStatus.email && "active"}`} onClick={sortByEmail}>
+        {sortStatus.email ? "↓ " : "↑ "}Email
+      </button>
     </div>
   );
 }

@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-function Person({ person, data }) {
-  const [children, setChildren] = useState([]);
-  const [collapsed, setCollapsed] = useState(false);
-  // Получаем массив детей элемента
-  useEffect(() => {
-    setChildren(data.filter((child) => child.parentId === person.id));
-  }, [data, person.id]);
+function Person({ person, childrenDict }) {
+  // Получаем массив детей из словаря
+  const [children] = useState(childrenDict[person.id]);
+  const [collapsed, setCollapsed] = useState(true);
+
   return (
-    <div className={`row ${!person.isActive ? "isInactive" : null}`}>
+    <div
+      className={`${collapsed ? "collapsed" : ""} row ${
+        !person.isActive ? "isInactive" : ""
+      }`}
+    >
       <div
-        className="fields"
-        style={{
-          cursor: children.length > 0 ? "pointer" : "normal",
-          color: children.length > 0 ? "black" : "gray",
-        }}
+        className={`fields ${
+          children?.length > 0 ? "have-children" : "no-children"
+        } 
+        `}
         onClick={() => setCollapsed(!collapsed)}
       >
         <div>{person.id}</div>
@@ -22,14 +23,12 @@ function Person({ person, data }) {
         <div>{person.name}</div>
         <div>{person.email}</div>
       </div>
-      <div
-        className="children"
-        style={{ display: collapsed ? "flex" : "none" }}
-      >
+      <div className="children">
         {/*Рекурсивно перебираем массив и если children пустой, вызова функции не происходит. Это является базовым случаем  */}
-        {children.map((child) => (
-          <Person person={child} key={child.id} data={data} />
-        ))}
+        {children?.length > 0 &&
+          children.map((child) => (
+            <Person person={child} key={child.id} childrenDict={childrenDict} />
+          ))}
       </div>
     </div>
   );

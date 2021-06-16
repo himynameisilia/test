@@ -14,8 +14,42 @@ body {
   background-color: rgba(255, 255, 255, 0.9);
 }
 
+.row.isInactive {
+  color: gray;
+}
+
 .filtered .row.isInactive {
   display: none;
+}
+
+.have-children {
+  cursor: pointer;
+}
+
+.fields::before {
+  width: 30px;
+  height: 30px;
+  display: block;
+  content: "⦁";
+  text-align: center;
+}
+
+.have-children::before {
+  width: 30px;
+  height: 30px;
+  display: block;
+  content: "▲";
+}
+
+.collapsed .have-children::before {
+  width: 30px;
+  height: 30px;
+  display: block;
+  content: "▼";
+}
+
+.no-children {
+  cursor: default;
 }
 
 .control {
@@ -40,6 +74,10 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.25);
   padding: 10px;
   border-radius: 5px;
+}
+
+.collapsed .children {
+  display: none;
 }
 
 .children .fields {
@@ -72,7 +110,7 @@ body {
 }
 
 .fieldHeader.id {
-  width: 75px;
+  width: 105px;
 }
 
 .fields div:nth-child(2) {
@@ -103,4 +141,13 @@ input {
   opacity: 0.9;
   cursor: pointer;
   margin-left: 15px;
+}
+
+button {
+  font-size: 24px;
+  margin: 0 5px;
+}
+
+button.active {
+  background-color: gray;
 }
