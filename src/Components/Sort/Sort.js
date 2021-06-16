@@ -11,7 +11,7 @@ function Sort({ setChildrenDict, childrenDict }) {
     for (const key in childrenDict) {
       if (Object.hasOwnProperty.call(childrenDict, key)) {
         sorted[key] = childrenDict[key].sort((a, b) => {
-          return sortStatus.balance
+          return sortStatus.balance === "asc"
             ? Number(a.balance.slice(1).replace(",", "")) -
                 Number(b.balance.slice(1).replace(",", ""))
             : Number(b.balance.slice(1).replace(",", "")) -
@@ -19,7 +19,10 @@ function Sort({ setChildrenDict, childrenDict }) {
         });
       }
     }
-    setSortStatus({ email: false, balance: !sortStatus.balance });
+    setSortStatus({
+      email: false,
+      balance: sortStatus.balance === "asc" ? "desc" : "asc",
+    });
     setChildrenDict(sorted);
   };
 
@@ -28,23 +31,32 @@ function Sort({ setChildrenDict, childrenDict }) {
     for (const key in childrenDict) {
       if (Object.hasOwnProperty.call(childrenDict, key)) {
         sorted[key] = childrenDict[key].sort((a, b) => {
-          return sortStatus.email
+          return sortStatus.email === "asc"
             ? ("" + a.email).localeCompare(b.email)
             : ("" + b.email).localeCompare(a.email);
         });
       }
     }
-    setSortStatus({ balance: false, email: !sortStatus.email });
+    setSortStatus({
+      balance: false,
+      email: sortStatus.email === "asc" ? "desc" : "asc",
+    });
     setChildrenDict(sorted);
   };
   return (
     <div>
       <span>Sort by</span>
-      <button className={`${sortStatus.balance && "active"}`} onClick={sortByBalance}>
-        {sortStatus.balance ? "↓ " : "↑ "}Balance
+      <button
+        className={`${sortStatus.balance && "active"}`}
+        onClick={sortByBalance}
+      >
+        {sortStatus.balance === "asc" ? "↓ " : "↑ "}Balance
       </button>
-      <button className={`${sortStatus.email && "active"}`} onClick={sortByEmail}>
-        {sortStatus.email ? "↓ " : "↑ "}Email
+      <button
+        className={`${sortStatus.email && "active"}`}
+        onClick={sortByEmail}
+      >
+        {sortStatus.email === "desc" ? "↓ " : "↑ "}Email
       </button>
     </div>
   );
